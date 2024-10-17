@@ -2,7 +2,7 @@
 {% extends "page/base.html" %}
 
 {% block content %}
-<div class="flex flex-row flex-wrap w-full h-full overflow-x-hidden justify-center gap-4">
+<div class="flex flex-wrap w-full h-full overflow-x-hidden gap-4 {% if vert %} justify-start flex-col {% else %} justify-center flex-row {% endif %}">
 	{% for video in videos %}
 		<div class="p-1 flex flex-col gap-2 w-[400px] h-[280px] cursor-pointer">
 			<a href="{% url 'video' video.video_id %}">

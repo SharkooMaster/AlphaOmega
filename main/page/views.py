@@ -6,27 +6,52 @@ import json
 
 from googleapiclient.discovery import build
 
-# Create your views here.
 def index(request):
-	# Call the function to get videos
-	# video = getRandomVideos()
+	getRandomVideos()
 	video = Video.objects.order_by('?')[:40]
-	# Pass the list of videos in a dictionary with the key 'videos'
-	return render(request, "page/home.html", {'videos': video})
 
-def getRandomVideos():
-	youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
+	return render(request, "page/home.html", {'videos': video, "vert": False})
 
-	request = youtube.search().list(
-		q=settings.YT_SEARCH_TERM,
-		part="snippet",
-		type="video",
-		maxResults=50
-	)
-
-	response = request.execute()
+def search(request):
+	_term = request.GET.get('term', 'christ is king')
+	print(_term)
+	response = performSearch(_term)
 
 	videos = []
+	for item in response['items']:
+		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
+			continue
+
+		video_id = item['id']['videoId']
+
+		thumbnails = item['snippet']['thumbnails']
+		default_thumbnail = thumbnails['default']['url'] if 'default' in thumbnails else None
+		medium_thumbnail = thumbnails['medium']['url'] if 'medium' in thumbnails else None
+		high_thumbnail = thumbnails['high']['url'] if 'high' in thumbnails else None
+
+		video_data = {
+			'title': item['snippet']['title'],
+			'video_id': video_id,
+			'description': item['snippet']['description'],
+			'thumbnail': medium_thumbnail,  # Higher resolution thumbnail
+			'embed_url': f"https://www.youtube.com/embed/{video_id}"
+		}
+		videos.append(video_data)
+	return render(request, "page/home.html", {"videos": videos, "vert": True})
+
+def performSearch(_term, _maxRes = 50):
+	youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
+	request = youtube.search().list(
+		q=_term,
+		part="snippet",
+		type="video",
+		maxResults=_maxRes
+	)
+	return request.execute()
+
+def getRandomVideos():
+	response = performSearch(settings.YT_SEARCH_TERM)
+
 	for item in response['items']:
 		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
 			continue
@@ -55,10 +80,6 @@ def getRandomVideos():
 				'thumbnail': video_data['thumbnail']
 			}
 		)
-
-		videos.append(video_data)
-
-	return videos
 
 def showVideo(request, video_id):
 	embed_url = f"https://www.youtube.com/embed/{video_id}"
