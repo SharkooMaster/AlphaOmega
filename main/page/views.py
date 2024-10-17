@@ -32,28 +32,35 @@ def getVideos():
 	return videos
 
 def getRandomVideos():
-	return Video.objects.all()
 	youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
 
 	request = youtube.search().list(
 		q=settings.YT_SEARCH_TERM,
 		part="snippet",
 		type="video",
-		maxResults=100
+		maxResults=50
 	)
 
 	response = request.execute()
 
 	videos = []
 	for item in response['items']:
+		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
+			continue
+
 		video_id = item['id']['videoId']
-		embed_url = f"https://www.youtube.com/embed/{video_id}"
+
+		thumbnails = item['snippet']['thumbnails']
+		default_thumbnail = thumbnails['default']['url'] if 'default' in thumbnails else None
+		medium_thumbnail = thumbnails['medium']['url'] if 'medium' in thumbnails else None
+		high_thumbnail = thumbnails['high']['url'] if 'high' in thumbnails else None
+
 		video_data = {
 			'title': item['snippet']['title'],
 			'videoId': video_id,
 			'description': item['snippet']['description'],
-			'thumbnail': item['snippet']['thumbnails']['default']['url'],
-			'embed_url': embed_url  # Embeddable URL for iframe
+			'thumbnail': medium_thumbnail,  # Higher resolution thumbnail
+			'embed_url': f"https://www.youtube.com/embed/{video_id}"
 		}
 		
 		# Store the video in the database
@@ -72,4 +79,5 @@ def getRandomVideos():
 
 def showVideo(request, video_id):
 	embed_url = f"https://www.youtube.com/embed/{video_id}"
-	return render(request, "page/video.html", {'video': Video.objects.get(video_id=video_id), 'embed_url': embed_url})
+	videos = Video.objects.order_by('?')[:20]
+	return render(request, "page/video.html", {'video': Video.objects.get(video_id=video_id), 'embed_url': embed_url, 'recommended': videos})
