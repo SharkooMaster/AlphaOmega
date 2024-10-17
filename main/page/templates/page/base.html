@@ -13,11 +13,19 @@
 
 	</head>
 
-	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-boost='true' class="bg-zinc-100 dark:bg-zinc-800">
-		<div class="w-full h-[50px] flex flex-row items-center justify-between px-8 bg-zinc-900">
-			<button hx-post="/account/logout/" >
-				Logout
-			</button>
+	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-boost="true" class="bg-neutral-100 dark:bg-zinc-800">
+		<div class="w-full h-[50px] flex flex-row items-center justify-between px-8 bg-white dark:bg-zinc-900">
+			<a class="h-[80%] dark:block hidden" href="/"> <img src="/static/LogoDark.png" class="h-full" /> </a>
+			<a class="h-[80%] dark:hidden block" href="/"> <img src="/static/Logo.png" class="h-full" /> </a>
+
+			<form hx-get="/search" hx-trigger="submit" hx-target="body">
+				<input class="md:w-[240px] lg:w-[480px] px-4 rounded-full bg-white shadow-sm text-[18px]" type="text" name="term">
+				<button class="text-white" type="submit">Search</button>
+			</form>
+
+			<div class="flex flex-row gap-2 h-full items-center justify-between">
+				<div class="bg-zinc-800 dark:bg-white rounded-full w-[34px] h-[34px]"></div>
+			</div>
 		</div>
 		{% block content %}
 		{% endblock %}
