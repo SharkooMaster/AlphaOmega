@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -24,6 +25,7 @@ from page import views as page_views
 urlpatterns = [
     path('admin/', admin.site.urls),
 	path("", page_views.index, name="index"),
+	path("account/", include("account.urls")),
 	path("video/<str:video_id>/", page_views.showVideo, name="video"),
 	path("search", page_views.search, name="search")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 

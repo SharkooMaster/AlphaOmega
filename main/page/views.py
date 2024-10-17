@@ -1,13 +1,22 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import Http404, get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from page.models import Video
 import json
 
+from account.models import Account
+
 from googleapiclient.discovery import build
 
 def index(request):
-	getRandomVideos()
+	# If no account exists redirect to signin
+	try:
+		account : Account = get_object_or_404(Account,user=request.user)
+	except:
+		return redirect("/account/signin")
+
+	getRandomVideos(account)
 	video = Video.objects.order_by('?')[:40]
 
 	return render(request, "page/home.html", {'videos': video, "vert": False})
@@ -49,8 +58,8 @@ def performSearch(_term, _maxRes = 50):
 	)
 	return request.execute()
 
-def getRandomVideos():
-	response = performSearch(settings.YT_SEARCH_TERM)
+def getRandomVideos(account: Account):
+	response = performSearch(account.home_screen_tags)
 
 	for item in response['items']:
 		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
