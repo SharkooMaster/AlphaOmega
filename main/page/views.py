@@ -16,7 +16,7 @@ def index(request):
 	except:
 		return redirect("/account/signin")
 
-	getRandomVideos(account)
+	# getRandomVideos(account)
 	video = Video.objects.order_by('?')[:40]
 
 	return render(request, "page/home.html", {'videos': video, "vert": False})

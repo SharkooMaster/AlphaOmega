@@ -11,6 +11,9 @@ from page.models import Video
 # Create your views here.
 
 
+def get_watch_later_button(request,video):
+    return render(request,"account/WatchLaterButton.html",{"video":get_object_or_404(Video,pk=video)})
+
 def playlist(request,name):
     playlist = get_object_or_404(Account,user=request.user).playlists.filter(title=name)[0]
 
@@ -59,7 +62,7 @@ def addtowatchlater(request, video:int):
     play.videos.add(video)
     play.save()
 
-    return render(request,"account/WatchLaterButton.html",{'remove':True})
+    return render(request,"account/WatchLaterButton.html",{'remove':True,'video':video})
 
 def removefromwatchlater(request, video:int):
     video = get_object_or_404(Video,pk=video)
@@ -70,9 +73,29 @@ def removefromwatchlater(request, video:int):
     play.videos.remove(video)
     play.save()
 
-    response = HttpResponse("")
-    response.headers['HX-Trigger'] = "removedfromwatchlater"
-    return response
+    return render(request,"account/playlist.html",{"playlist":play})
+
+def addtowatchlater_button(request, video:int):
+    video = get_object_or_404(Video,pk=video)
+
+    account : Account = get_object_or_404(Account,user=request.user)
+    play = account.watch_later
+
+    play.videos.add(video)
+    play.save()
+
+    return render(request,"account/WatchLaterButton.html",{'remove':True,'video':video})
+
+def removefromwatchlater_button(request, video:int):
+    video = get_object_or_404(Video,pk=video)
+
+    account : Account = get_object_or_404(Account,user=request.user)
+    play = account.watch_later
+
+    play.videos.remove(video)
+    play.save()
+
+    return render(request,"account/WatchLaterButton.html",{'remove':False,'video':video})
     #return render(request,"account/playlist.html",{"playlist":play})
 
 def settings(request):

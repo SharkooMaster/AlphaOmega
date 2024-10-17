@@ -1,8 +1,8 @@
-
 {% if not remove %}
 	<svg
-		hx-post="/account/addtowatchlater/{{video.pk}}"
+		hx-post="/account/addtowatchlater/button/{{video.pk}}"
 		hx-swap="outerHTML"
+		hx-target="this"
 		width="32px"
 		height="32px"
 		viewBox="0 0 24 24"
@@ -18,8 +18,9 @@
 	</svg>
 	{% else %}
 	<svg
-		hx-post="/account/removefromwatchlater/{{video.pk}}"
+		hx-post="/account/removefromwatchlater/button/{{video.pk}}"
 		hx-swap="outerHTML"
+		hx-target="this"
 		width="32px"
 		height="32px"
 		viewBox="0 0 24 24"
