@@ -59,7 +59,7 @@ def performSearch(_term, _maxRes = 50):
 	return request.execute()
 
 def getRandomVideos(account: Account):
-	response = performSearch(settings.YT_SEARCH_TERM)
+	response = performSearch(account.home_screen_tags)
 
 	for item in response['items']:
 		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
