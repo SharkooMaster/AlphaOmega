@@ -1,0 +1,66 @@
+{% extends "page/base.html" %}
+
+{% block title %} Sign up  {% endblock %}
+
+{% block nav %}
+{% endblock %}
+
+{% block content %}
+	<style type="text/css" media="screen">
+		/* Custom Input Styling (to replicate DaisyUI input-bordered) */
+		input {
+			width: 100%;
+			padding: 10px 12px;
+			border: 1px solid #ccc; /* Border color */
+			border-radius: 4px; /* Rounded corners */
+			font-size: 16px;
+			color: #333;
+			outline: none;
+			transition: border-color 0.3s ease; /* Smooth border transition */
+		}
+
+		/* Add a hover state */
+		input:hover {
+			border-color: #999;
+		}
+
+		/* Add a focus state */
+		input:focus {
+			border-color: #007bff; /* Focus border color */
+			box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional shadow on focus */
+		}
+
+		/* Optional: Disabled input state */
+		input:disabled {
+			background-color: #f5f5f5;
+			border-color: #ddd;
+			cursor: not-allowed;
+			color: #999;
+		}
+
+		ul{
+			display:none
+		}
+	</style>
+
+	<div class="w-screen h-screen flex items-center justify-center" >
+		<div class="bg-base-200 flex flex-col p-12 rounded-lg gap-4" >
+			<h2>Sign Up</h2>
+			<form method="POST" class="flex flex-col gap-4" >
+				{% csrf_token %}
+				{{ form.as_p }}
+				<a href="/account/login" class="link link-primary">Login?</a>
+				<button type="submit" class="btn btn-primary" >Sign Up</button>
+			</form>
+			{% if messages %}
+				<ul class="flex">
+					{% for message in messages %}
+						<li>{{ message }}</li>
+					{% endfor %}
+				</ul>
+			{% endif %}
+
+		</div>
+	</div>
+
+{% endblock %}
