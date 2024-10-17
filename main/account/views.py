@@ -34,7 +34,7 @@ def signup_view(request):
             account.save()
             login(request, user)  # Automatically log the user in
             messages.success(request, 'Account created successfully!')
-            return redirect('/account')  # Redirect to home or any page after sign up
+            return redirect("/")  # Redirect to home or any page after sign up
     else:
         form = CustomSignUpForm()
 
