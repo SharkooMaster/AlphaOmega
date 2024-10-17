@@ -2,6 +2,13 @@
 {% extends "page/base.html" %}
 
 {% block content %}
-<div class="flex flex-row flex-wrap w-full h-full overflow-x-hidden">
+<div class="flex flex-row flex-wrap w-full h-full overflow-x-hidden justify-center">
+	{% for video in videos %}
+	<div class="p-1 flex flex-col gap-2 w-[450px] h-[280px] cursor-pointer">
+		{% comment %} <iframe width="560" height="315" src="{{ video.embed_url }}" frameborder="0" allowfullscreen></iframe> {% endcomment %}
+		<img src="{{ video.thumbnail }}" class="w-[400px] h-[220px] bg-black bg-center bg-cover bg-center" >
+		<p class="text-black dark:text-white truncate flex-wrap w-full pr-2">{{ video.title }}</p>
+	</div>
+	{% endfor %}
 </div>
 {% endblock content %}
