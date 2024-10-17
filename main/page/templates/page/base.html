@@ -13,8 +13,11 @@
 
 	</head>
 
-	<body hx-boost="true" class="bg-zinc-100 dark:bg-zinc-800">
+	<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-boost='true' class="bg-zinc-100 dark:bg-zinc-800">
 		<div class="w-full h-[50px] flex flex-row items-center justify-between px-8 bg-zinc-900">
+			<button hx-post="/account/logout/" >
+				Logout
+			</button>
 		</div>
 		{% block content %}
 		{% endblock %}

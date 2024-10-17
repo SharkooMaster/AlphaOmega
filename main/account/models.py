@@ -9,7 +9,7 @@ class PlayList(models.Model):
     title  = models.TextField(default="")
     videos = models.ManyToManyField(Video,related_name="playlists")
 
-    owner = models.ForeignKey('Account', on_delete=models.CASCADE)
+    owner = models.ForeignKey('Account', on_delete=models.CASCADE,related_name="playlists")
 
 class Account (models.Model):
     user             = models.ForeignKey(User,on_delete=models.CASCADE)

@@ -1,16 +1,27 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import Http404, get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
 from page.models import Video
 import json
 
+from account.models import Account
+
 from googleapiclient.discovery import build
 
 # Create your views here.
 def index(request):
+
+	# If no account exists redirect to signin
+	try:
+		account : Account = get_object_or_404(Account,user=request.user)
+	except:
+		return redirect("/account/signin")
+
+
 	# Call the function to get videos
-	# video = getRandomVideos()
-	video = getVideos()
+	video = getRandomVideos(account)
+	# video = getVideos()
 	# Pass the list of videos in a dictionary with the key 'videos'
 	return render(request, "page/home.html", {'videos': video})
 
@@ -31,11 +42,11 @@ def getVideos():
 		videos.append(video_data)
 	return videos
 
-def getRandomVideos():
+def getRandomVideos(account: Account):
 	youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
 
 	request = youtube.search().list(
-		q=settings.YT_SEARCH_TERM,
+		q=account.home_screen_tags,
 		part="snippet",
 		type="video",
 		maxResults=50

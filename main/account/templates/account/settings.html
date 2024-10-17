@@ -1,0 +1,38 @@
+{% extends "page/base.html" %}
+
+
+{% block content %}
+	<div class="w-screen items-center flex  flex-col gap-2" >
+		<h1 class="text-3xl font-bold" >Settings {{user.username}}</h1>
+		<label for="">
+			Home screen search terms
+		</label>
+		<input name="home_screen_tags" value="{{account.home_screen_tags}}" class="input input-bordered" />
+
+		<div class='flex flex-col gap-2' >
+			{% for playlist in account.playlists.all %}
+				<a href="/account/playlist/{{playlist.title}}" class="link">{{playlist.title}}</a>
+			{% endfor %}
+		</div>
+
+
+		<button
+			id="submit"
+			hx-post="/account/savesettings/"
+			hx-include="[name='home_screen_tags']"
+			class="btn btn-outline" >
+			Save settings
+		</button>
+	</div>
+
+	<script>
+	 // if a input is changed change buttons innerhtml
+		function handleInputChange(event) {
+			let sub = document.getElementById("submit").innerHTML = "Save"
+		}
+		const inputs = document.querySelectorAll('input, textarea, select');
+		inputs.forEach(input => {
+			input.addEventListener('input', handleInputChange);
+		});
+	</script>
+{% endblock %}
