@@ -15,5 +15,7 @@ urlpatterns = [
     path('addtowatchlater/<int:video>',views.addtowatchlater),
     path('removefromwatchlater/<int:video>',views.removefromwatchlater),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('playlist/createnewplaylist/', views.create_new_playlist),
+    path('playlist/settitle/<int:pk>/', views.set_title),
 
 ]
