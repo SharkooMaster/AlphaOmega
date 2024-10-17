@@ -69,3 +69,7 @@ def getRandomVideos():
 		videos.append(video_data)
 
 	return videos
+
+def showVideo(request, video_id):
+	embed_url = f"https://www.youtube.com/embed/{video_id}"
+	return render(request, "page/video.html", {'video': Video.objects.get(video_id=video_id), 'embed_url': embed_url})

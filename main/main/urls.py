@@ -21,5 +21,6 @@ from page import views as page_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path("", page_views.index, name="index")
+	path("", page_views.index, name="index"),
+	path("/video/<str:video_id>/", page_views.showVideo, name="video")
 ]

@@ -1,0 +1,10 @@
+{% extends "page/base.html" %}
+
+{% block content %}
+<div class="flex flex-row flex-wrap w-full h-full">
+	<div class="md:w-[80%] w-full h-fit overflow-x-hidden flex flex-col items-center md:items-start gap-4 py-2">
+		<iframe class="md:w-full md:h-[840px] w-[500px] h-[320px]" src="{{ embed_url }}" frameborder="0" allowfullscreen></iframe>
+		<p class="text-xl text-black dark:text-white">{{ video.title }}</p>
+	</div>
+</div>
+{% endblock content %}
