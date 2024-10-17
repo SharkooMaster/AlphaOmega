@@ -24,4 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path("", page_views.index, name="index"),
 	path("account/", include("account.urls")),
+	path("/video/<str:video_id>/", page_views.showVideo, name="video"),
 ]
