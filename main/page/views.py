@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import Http404, get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from account.models import Account
 from page.models import Video
 import json
 
@@ -16,7 +17,7 @@ def index(request):
 	except:
 		return redirect("/account/signin")
 
-	getRandomVideos(account)
+	# getRandomVideos(account)
 	video = Video.objects.order_by('?')[:40]
 
 	return render(request, "page/home.html", {'videos': video, "vert": False})
@@ -46,6 +47,17 @@ def search(request):
 			'embed_url': f"https://www.youtube.com/embed/{video_id}"
 		}
 		videos.append(video_data)
+		#
+		# Store the video in the database
+		video, created = Video.objects.get_or_create(
+			video_id=video_data['video_id'],
+			defaults={
+				'title': video_data['title'],
+				'description': video_data['description'],
+				'thumbnail': video_data['thumbnail']
+			}
+		)
+
 	return render(request, "page/home.html", {"videos": videos, "vert": True})
 
 def performSearch(_term, _maxRes = 50):
