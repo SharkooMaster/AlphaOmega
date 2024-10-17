@@ -1,10 +1,20 @@
 {% extends "page/base.html" %}
 
 {% block content %}
-<div class="flex flex-row flex-wrap w-full h-full">
-	<div class="md:w-[80%] w-full h-fit overflow-x-hidden flex flex-col items-center md:items-start gap-4 py-2">
+<div class="flex flex-row flex-wrap w-full h-full pt-2">
+	<div class="md:w-[80%] w-full h-fit overflow-x-hidden flex flex-col items-center md:items-start gap-2 py-2 md:pl-8">
 		<iframe class="md:w-full md:h-[840px] w-[500px] h-[320px]" src="{{ embed_url }}" frameborder="0" allowfullscreen></iframe>
-		<p class="text-xl text-black dark:text-white">{{ video.title }}</p>
+		<p class="text-2xl text-black dark:text-white">{{ video.title }}</p>
+		<p class="text-md text-black dark:text-white">{{ video.description }}</p>
+	</div>
+
+	<div class="flex flex-col w-full md:w-[20%] h-full gap-4 md:px-0 px-8">
+		{% for vid in recommended %}
+			<a href="{% url 'video' vid.video_id %}" class="flex flex-col px-4 pt-2 w-[full] h-[240px] cursor-pointer">
+				<img src="{{ vid.thumbnail }}" class="h-[200px] w-full">
+				<p class="text-black dark:text-white">{{ vid.title }}</p>
+			</a>
+		{% endfor %}
 	</div>
 </div>
 {% endblock content %}
