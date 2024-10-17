@@ -1,0 +1,16 @@
+{% extends "page/base.html" %}
+
+
+{% block content %}
+
+	{% for playlist in playlists %}
+		{{playlist.title}}
+		<div class="bg-base-200 p-2 rounded-lg" >
+			{% for video in playlist.videos.all %}
+				<img src="{{video.thumbnail}}" alt="" />
+				{{ video.title }}
+			{% endfor %}
+		</div>
+	{% endfor %}
+
+{% endblock %}

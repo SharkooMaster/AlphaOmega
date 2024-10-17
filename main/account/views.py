@@ -1,12 +1,18 @@
 from django.contrib.admin.options import messages
 from django.contrib.auth import authenticate, login
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from .forms import CustomSignUpForm
 from .forms import CustomLoginForm
 
 from account.models import Account
 
 # Create your views here.
+
+
+def playlists(request):
+    playlists = [get_object_or_404(Account,user=request.user).watch_later]
+
+    return render(request,"account/playlists.html",{"playlists":playlists})
 
 def custom_login_view(request):
     if request.method == 'POST':
@@ -32,6 +38,8 @@ def signup_view(request):
             user = form.save()  # Save the new user
             account = Account(user=user)
             account.save()
+            account.create_watch_later()
+
             login(request, user)  # Automatically log the user in
             messages.success(request, 'Account created successfully!')
             return redirect("/")  # Redirect to home or any page after sign up
