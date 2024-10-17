@@ -2,7 +2,12 @@
 
 
 {% block content %}
-<div class="w-screen flex flex-col items-center">
+<div
+	class="w-screen flex flex-col items-center"
+	hx-post="/account/playlist/{{playlist.title}}"
+	hx-trigger="removedfromwatchlater"
+	hx-target="body"
+>
 	<h1 class='text-2xl font-bold' >{{playlist.title}}</h1>
 	<div class="p-2 rounded-lg flex flex-col gap-4 p-12 w-1/2" >
 		{% for video in playlist.videos.all %}
@@ -13,7 +18,7 @@
 			</div>
 			<button
 				hx-post="/account/removefromwatchlater/{{video.pk}}"
-				hx-target='body'
+				hx-swap='none'
 				class="btn btn-error w-fit" >
 				Remove
 			</button>

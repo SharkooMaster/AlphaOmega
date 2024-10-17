@@ -59,7 +59,7 @@ def addtowatchlater(request, video:int):
     play.videos.add(video)
     play.save()
 
-    return HttpResponse("")
+    return render(request,"account/WatchLaterButton.html",{'remove':True})
 
 def removefromwatchlater(request, video:int):
     video = get_object_or_404(Video,pk=video)
@@ -70,7 +70,10 @@ def removefromwatchlater(request, video:int):
     play.videos.remove(video)
     play.save()
 
-    return render(request,"account/playlist.html",{"playlist":play})
+    response = HttpResponse("")
+    response.headers['HX-Trigger'] = "removedfromwatchlater"
+    return response
+    #return render(request,"account/playlist.html",{"playlist":play})
 
 def settings(request):
     account: Account = get_object_or_404(Account,user=request.user)
