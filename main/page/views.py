@@ -10,26 +10,9 @@ from googleapiclient.discovery import build
 def index(request):
 	# Call the function to get videos
 	# video = getRandomVideos()
-	video = getVideos()
+	video = Video.objects.order_by('?')[:40]
 	# Pass the list of videos in a dictionary with the key 'videos'
 	return render(request, "page/home.html", {'videos': video})
-
-def getVideos():
-	arr = Video.objects.all()
-		
-	videos = []
-	for item in arr:
-		video_id = item.video_id
-		embed_url = f"https://www.youtube.com/embed/{video_id}"
-		video_data = {
-			'title': item.title,
-			'videoId': video_id,
-			'description': item.description,
-			'thumbnail': item.thumbnail,
-			'embed_url': embed_url
-		}
-		videos.append(video_data)
-	return videos
 
 def getRandomVideos():
 	youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)

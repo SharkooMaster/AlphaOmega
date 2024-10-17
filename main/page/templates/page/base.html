@@ -11,8 +11,10 @@
 		<script src="https://cdn.tailwindcss.com"></script>
 	</head>
 
-	<body hx-boost="true" class="bg-zinc-100 dark:bg-zinc-800">
-		<div class="w-full h-[50px] flex flex-row items-center justify-between px-8 bg-zinc-900">
+	<body hx-boost="true" class="bg-neutral-100 dark:bg-zinc-800">
+		<div class="w-full h-[50px] flex flex-row items-center justify-between px-8 bg-white dark:bg-zinc-900">
+			<a class="h-[80%] dark:block hidden" href="/"> <img src="/static/LogoDark.png" class="h-full" /> </a>
+			<a class="h-[80%] dark:hidden block" href="/"> <img src="/static/Logo.png" class="h-full" /> </a>
 		</div>
 		{% block content %}
 		{% endblock %}
