@@ -6,15 +6,15 @@ from .forms import CustomSignUpForm
 from .forms import CustomLoginForm
 
 from account.models import Account
+from playlist.models import PlayList
 from page.models import Video
 
 # Create your views here.
 
 
-def playlist(request,name):
-    playlist = get_object_or_404(Account,user=request.user).playlists.filter(title=name)[0]
+def get_watch_later_button(request,video):
+    return render(request,"account/WatchLaterButton.html",{"video":get_object_or_404(Video,pk=video)})
 
-    return render(request,"account/playlist.html",{"playlist":playlist})
 
 def custom_login_view(request):
     if request.method == 'POST':
@@ -59,7 +59,7 @@ def addtowatchlater(request, video:int):
     play.videos.add(video)
     play.save()
 
-    return HttpResponse("")
+    return render(request,"account/WatchLaterButton.html",{'remove':True,'video':video})
 
 def removefromwatchlater(request, video:int):
     video = get_object_or_404(Video,pk=video)
@@ -71,6 +71,29 @@ def removefromwatchlater(request, video:int):
     play.save()
 
     return render(request,"account/playlist.html",{"playlist":play})
+
+def addtowatchlater_button(request, video:int):
+    video = get_object_or_404(Video,pk=video)
+
+    account : Account = get_object_or_404(Account,user=request.user)
+    play = account.watch_later
+
+    play.videos.add(video)
+    play.save()
+
+    return render(request,"account/WatchLaterButton.html",{'remove':True,'video':video})
+
+def removefromwatchlater_button(request, video:int):
+    video = get_object_or_404(Video,pk=video)
+
+    account : Account = get_object_or_404(Account,user=request.user)
+    play = account.watch_later
+
+    play.videos.remove(video)
+    play.save()
+
+    return render(request,"account/WatchLaterButton.html",{'remove':False,'video':video})
+    #return render(request,"account/playlist.html",{"playlist":play})
 
 def settings(request):
     account: Account = get_object_or_404(Account,user=request.user)

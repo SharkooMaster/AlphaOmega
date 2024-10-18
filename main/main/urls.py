@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path("", page_views.index, name="index"),
 	path("account/", include("account.urls")),
+	path("playlist/", include("playlist.urls")),
 	path("video/<str:video_id>/", page_views.showVideo, name="video"),
 	path("search", page_views.search, name="search")
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
