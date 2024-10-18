@@ -5,7 +5,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms import CustomSignUpForm
 from .forms import CustomLoginForm
 
-from account.models import Account, PlayList
+from account.models import Account
+from playlist.models import PlayList
 from page.models import Video
 
 # Create your views here.
@@ -14,10 +15,6 @@ from page.models import Video
 def get_watch_later_button(request,video):
     return render(request,"account/WatchLaterButton.html",{"video":get_object_or_404(Video,pk=video)})
 
-def playlist(request,name):
-    playlist = get_object_or_404(Account,user=request.user).playlists.filter(title=name)[0]
-
-    return render(request,"account/playlist.html",{"playlist":playlist})
 
 def custom_login_view(request):
     if request.method == 'POST':
@@ -107,22 +104,3 @@ def savesettings(request):
     account.home_screen_tags = request.POST['home_screen_tags']
     account.save()
     return HttpResponse("Saved sucessfully")
-
-def create_new_playlist(request):
-    playlist = PlayList(owner=get_object_or_404(Account,user=request.user))
-    playlist.save()
-    html = f"""
-        <form hx-post='/account/playlist/settitle/{playlist.pk}/' >
-        <input name='title' class='input input-bordered' placeholder='Playlist title' />
-        <button  class='btn btn-primary'>Save</button>
-        </form>
-    """
-    return HttpResponse(html)
-
-def set_title(request,pk):
-    _playlist = get_object_or_404(PlayList,pk=pk)
-    _playlist.title= request.POST['title']
-    _playlist.save()
-
-    html = f"<a href='/account/playlist/{_playlist.title}' class='link'>{_playlist.title}</a>"
-    return HttpResponse(html)
