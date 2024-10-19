@@ -10,6 +10,7 @@ from channel.models import Channel
 from channel import views as views
 
 urlpatterns = [
-    path('<str:title>',  views.main_page),
+    path('<str:channel_id>',  views.main_page),
+    path('getvideos/<str:channel_id>/<int:amount>',  views.get_videos),
 
 ]

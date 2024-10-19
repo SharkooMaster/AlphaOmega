@@ -7,12 +7,12 @@ import json
 
 # Create your views here.
 
-def channel_videos(playlist_id):
+def channel_videos(playlist_id,amount):
     youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
     yt_request = youtube.playlistItems().list(
         part='snippet',
         playlistId=playlist_id,
-        maxResults=50  # You can specify how many results you want, max 50 per request
+        maxResults=amount  # You can specify how many results you want, max 50 per request
     )
     response = yt_request.execute()
     from page.views import format_videos
@@ -20,12 +20,18 @@ def channel_videos(playlist_id):
     print(response)
     return format_videos(response)
 
+def get_videos(request,channel_id,amount):
+    channel:Channel = get_object_or_404(Channel,channel_id=channel_id)
+    return render(request,"channel/videos.html",{'videos':channel_videos(channel.playlist_id,amount)})
 
 
-def main_page(request,title):
-    channel = get_object_or_404(Channel,title=title)
+def main_page(request,channel_id):
+
+    channel :Channel = get_object_or_404(Channel,channel_id=channel_id)
+
+    ## TODO Only refresh some time maybe?
+
     youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
-
     # Request channel information
     yt_request = youtube.channels().list(
         part='snippet,statistics,contentDetails',  # You can add more parts if needed
@@ -34,7 +40,6 @@ def main_page(request,title):
 
     # Execute the request
     response = yt_request.execute()
-    print(response)
 
     channel.description = response['items'][0]['snippet']['description']
     channel.subscriber_count = int(response['items'][0]['statistics']['subscriberCount'])
@@ -45,5 +50,4 @@ def main_page(request,title):
     channel.playlist_id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
     channel.save()
 
-    print(response)
-    return render(request,"channel/channel.html",{'channel':channel,'videos':channel_videos(channel.playlist_id)})
+    return render(request,"channel/channel.html",{'channel':channel})
