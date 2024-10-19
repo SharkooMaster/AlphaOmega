@@ -7,6 +7,28 @@ import json
 
 # Create your views here.
 
+def channel_videos(playlist_id):
+    youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
+    yt_request = youtube.playlistItems().list(
+        part='snippet',
+        playlistId=playlist_id,
+        maxResults=50  # You can specify how many results you want, max 50 per request
+    )
+    response = yt_request.execute()
+    videos = []
+    for item in response['items']:
+        video_data = {
+            'video_id': item['snippet']['resourceId']['videoId'],
+            'title': item['snippet']['title'],
+            'description': item['snippet']['description'],
+            'thumbnail': item['snippet']['thumbnails']['high']['url'] if 'high' in item['snippet']['thumbnails'] else None
+        }
+        videos.append(video_data)
+
+    return videos
+
+
+
 def main_page(request,title):
     channel = get_object_or_404(Channel,title=title)
     youtube = build('youtube', 'v3', developerKey=settings.YT_API_KEY)
@@ -27,7 +49,8 @@ def main_page(request,title):
     channel.profile_high = response['items'][0]['snippet']['thumbnails']['high']['url']
     channel.profile_medium = response['items'][0]['snippet']['thumbnails']['medium']['url']
     channel.profile_small = response['items'][0]['snippet']['thumbnails']['default']['url']
+    channel.playlist_id = response['items'][0]['contentDetails']['relatedPlaylists']['uploads']
     channel.save()
 
     print(response)
-    return render(request,"channel/channel.html",{'channel':channel})
+    return render(request,"channel/channel.html",{'channel':channel,'videos':channel_videos(channel.playlist_id)})
