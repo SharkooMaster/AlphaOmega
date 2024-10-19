@@ -1,0 +1,22 @@
+<input checked type="checkbox" id="my_modal_6" class="modal-toggle" />
+<div class="modal" role="dialog">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold">Which playlist to add to</h3>
+
+	{% for playlist in account.playlists.all %}
+		<input type="checkbox"
+			{% if video in playlist.videos.all %} checked
+			hx-post="/playlist/removevideo/{{playlist.pk}}/{{video.pk}}/"
+			{% else %}
+			hx-post="/playlist/addvideo/{{playlist.pk}}/{{video.pk}}/"
+			{% endif %}
+			hx-target="#model"
+			class="checkbox" />
+			{{playlist.title}}
+	{% endfor %}
+
+    <div class="modal-action">
+      <label for="my_modal_6" class="btn">Close!</label>
+    </div>
+  </div>
+</div>

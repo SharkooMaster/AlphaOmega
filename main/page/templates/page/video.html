@@ -1,13 +1,18 @@
 {% extends "page/base.html" %}
 
 {% block content %}
+<div id="model" >
+</div>
 <div class="flex flex-row flex-wrap w-full h-full pt-2">
 	<div class="md:w-[80%] w-full h-fit overflow-x-hidden flex flex-col items-center md:items-start gap-2 py-2 md:pl-8">
 		<iframe class="md:w-full md:h-[840px] w-[500px] h-[320px]" src="{{ embed_url }}" frameborder="0" allowfullscreen></iframe>
 		<p class="text-2xl text-black dark:text-white">{{ video.title }}</p>
 		<p class="text-md text-black dark:text-white">{{ video.description }}</p>
-		<button hx-post="/account/addtowatchlater/{{video.pk}}" class="btn btn-primary" >
-			Watch Later
+		<button
+			hx-target="#model"
+			hx-post="/playlist/getplaylistpopup/{{video.pk}}/"
+			class="btn btn-primary" >
+			Add to playlist
 		</button>
 	</div>
 
