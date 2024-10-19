@@ -6,6 +6,7 @@
 		<iframe class="md:w-full md:h-[840px] w-[500px] h-[320px]" src="{{ embed_url }}" frameborder="0" allowfullscreen></iframe>
 		<p class="text-2xl text-black dark:text-white">{{ video.title }}</p>
 		<p class="text-md text-black dark:text-white">{{ video.description }}</p>
+		<a href="" class="link" >{{video.channel.title}}</a>
 		<button hx-post="/account/addtowatchlater/{{video.pk}}" class="btn btn-primary" >
 			Watch Later
 		</button>

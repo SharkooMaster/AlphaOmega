@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 	
     'page',
     'account',
+    'channel',
 ]
 
 MIDDLEWARE = [

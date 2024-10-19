@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import Http404, get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from channel.models import Channel
 from account.models import Account
 from page.models import Video
 import json
@@ -27,12 +28,14 @@ def search(request):
 	print(_term)
 	response = performSearch(_term)
 
+
 	videos = []
 	for item in response['items']:
 		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
 			continue
 
 		video_id = item['id']['videoId']
+		print(item['snippet']["channelId"])	#
 
 		thumbnails = item['snippet']['thumbnails']
 		default_thumbnail = thumbnails['default']['url'] if 'default' in thumbnails else None
@@ -49,6 +52,7 @@ def search(request):
 		videos.append(video_data)
 		#
 		# Store the video in the database
+		# maybe store video when click instead
 		video, created = Video.objects.get_or_create(
 			video_id=video_data['video_id'],
 			defaults={
@@ -57,6 +61,9 @@ def search(request):
 				'thumbnail': video_data['thumbnail']
 			}
 		)
+		channel,channel_created = Channel.objects.get_or_create(channel_id=item['snippet']['channelId'],title=item['snippet']['channelTitle'])
+		video.channel = channel
+		video.save()
 
 	return render(request, "page/home.html", {"videos": videos, "vert": True})
 
