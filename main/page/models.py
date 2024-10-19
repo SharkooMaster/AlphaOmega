@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 from channel.models import Channel
 
@@ -10,3 +11,13 @@ class Video(models.Model):
 	thumbnail = models.URLField()
 
 	channel = models.ForeignKey(Channel,on_delete=models.CASCADE,related_name="videos",null=True)
+
+	def json(self):
+		return json.dumps({
+			'title' : self.title,
+			'video_id':self.video_id,
+			'description':self.description,
+			'thumbnail':self.thumbnail,
+			'channel_id':self.channel.channel_id if self.channel != None else 0,
+			'channel_title':self.channel.title if self.channel != None else 0
+		})

@@ -16,15 +16,9 @@
 
 		<div class="divider"></div>
 		<div class="mx-auto px-4">
-			<div class="w-full gap-2 grid grid-cols-4 grid-rows-*" >
+			<div class="flex flex-wrap w-full h-full overflow-x-hidden gap-4 justify-center flex-row" >
 				{% for video in videos %}
-					<div class="p-1 flex flex-col gap-2 w-[400px] h-[280px] cursor-pointer relative">
-						<a href="{% url 'video' video.video_id %}" >
-							<img src="{{ video.thumbnail }}" class="w-[400px] h-[220px] bg-black bg-center bg-cover bg-center" >
-						</a>
-						{% include "account/WatchLaterButton.html" %}
-						<p class="text-black dark:text-white truncate flex-wrap w-full pr-2">{{ video.title }}</p>
-					</div>
+					{% include "page/video_item.html" with video=video %}
 				{% endfor %}
 			</div>
 		</div>

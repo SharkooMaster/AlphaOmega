@@ -15,17 +15,10 @@ def channel_videos(playlist_id):
         maxResults=50  # You can specify how many results you want, max 50 per request
     )
     response = yt_request.execute()
-    videos = []
-    for item in response['items']:
-        video_data = {
-            'video_id': item['snippet']['resourceId']['videoId'],
-            'title': item['snippet']['title'],
-            'description': item['snippet']['description'],
-            'thumbnail': item['snippet']['thumbnails']['high']['url'] if 'high' in item['snippet']['thumbnails'] else None
-        }
-        videos.append(video_data)
+    from page.views import format_videos
 
-    return videos
+    print(response)
+    return format_videos(response)
 
 
 

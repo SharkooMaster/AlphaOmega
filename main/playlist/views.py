@@ -48,7 +48,7 @@ def set_title(request,pk):
     if request.POST['type'] == 'checkbox':
         html = f"""
 		<input type="checkbox"
-			hx-post="/playlist/addvideo/{_playlist.pk}/{video.pk}/"
+			hx-post="/playlist/addvideo/{playlist.pk}/{video.pk}/"
 			hx-target="#model"
 			class="checkbox" />
 			{_playlist.title}

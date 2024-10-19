@@ -3,13 +3,8 @@ from django.db import models
 
 # Create your models here.
 
-from page.models import Video
+from playlist.models import PlayList
 
-class PlayList(models.Model):
-    title  = models.TextField(default="")
-    videos = models.ManyToManyField(Video,related_name="playlists")
-
-    owner = models.ForeignKey('Account', on_delete=models.CASCADE,related_name="playlists")
 
 class Account (models.Model):
     user             = models.ForeignKey(User,on_delete=models.CASCADE)

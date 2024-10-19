@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'page',
+    'playlist',
     'account',
     'channel',
 ]

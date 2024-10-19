@@ -11,10 +11,11 @@
 
 		<div class='flex flex-col gap-2' >
 			{% for playlist in account.playlists.all %}
-				<a href="/account/playlist/{{playlist.title}}" class="link">{{playlist.title}}</a>
+				<a href="/playlist/{{playlist.title}}" class="link">{{playlist.title}}</a>
 			{% endfor %}
 			<button class="btn btn-primary"
-					hx-post='/account/playlist/createnewplaylist/'
+					hx-post='/playlist/createnewplaylist/'
+					hx-vals='{"type":"link"}'
 					hx-swap="outerHTML"
 			>
 				Add new playlist
