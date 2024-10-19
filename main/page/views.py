@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import Http404, get_object_or_404, redirect, render
 from django.http import HttpResponse, JsonResponse
 from django.conf import settings
+from channel.models import Channel
 from account.models import Account
 from page.models import Video
 import json
@@ -22,28 +23,36 @@ def index(request):
 
 	return render(request, "page/home.html", {'videos': video, "vert": False})
 
-def search_videos(search_str):
+def format_videos(response):
 	"""
 	Will preforme a search to youtube with the search string and
 	return a list of videos in a nicer format.
 	"""
-	response = performSearch(search_str)
 
 	videos = []
 	for item in response['items']:
 		if 'contentDetails' in item and not item['contentDetails'].get('embeddable', True):
 			continue
 
-		video_id = item['id']['videoId']
+		## in some request the video id is in the resouceId
+		try:
+			video_id = item['id']['videoId']
+		except:
+			video_id = item['snippet']['resourceId']['videoId']
+
+		print(item)	#
 
 		thumbnails = item['snippet']['thumbnails']
 		default_thumbnail = thumbnails['default']['url'] if 'default' in thumbnails else None
 		medium_thumbnail = thumbnails['medium']['url'] if 'medium' in thumbnails else None
 		high_thumbnail = thumbnails['high']['url'] if 'high' in thumbnails else None
 
+
 		video_data = {
 			'title': item['snippet']['title'],
 			'video_id': video_id,
+			'channel_id':item['snippet']['channelId'],
+			'channel_title':item['snippet']['channelTitle'],
 			'description': item['snippet']['description'],
 			'thumbnail': medium_thumbnail,  # Higher resolution thumbnail
 			'embed_url': f"https://www.youtube.com/embed/{video_id}"
@@ -54,7 +63,7 @@ def search_videos(search_str):
 	return videos
 def search(request):
 	_term = request.GET.get('term', 'christ is king')
-	videos = search_videos(_term)
+	videos = format_videos(performSearch(_term))
 
 	return render(request, "page/home.html", {"videos": videos, "vert": True})
 
@@ -69,16 +78,16 @@ def performSearch(_term, _maxRes = 50):
 	return request.execute()
 
 def getRandomVideos(account: Account):
-	videos = search_videos(account.home_screen_tags)
+	videos = format_videos(performSearch(account.home_screen_tags))
 
 	for item in videos:
 			# Store the video in the database
 		video, created = Video.objects.get_or_create(
-			video_id=video_data['videoId'],
+			video_id=item['videoId'],
 			defaults={
-				'title': video_data['title'],
-				'description': video_data['description'],
-				'thumbnail': video_data['thumbnail']
+				'title': item['title'],
+				'description': item['description'],
+				'thumbnail': item['thumbnail']
 			}
 		)
 
@@ -98,6 +107,9 @@ def addor_and_show(request):
 			'thumbnail': video_data['thumbnail']
 		}
 	)
+	channel,channel_created = Channel.objects.get_or_create(channel_id=video_data['channel_id'],title=video_data['channel_title'])
+	video.channel = channel
+	video.save()
 
 	response = HttpResponse()
 	response.headers['Hx-Redirect'] = f'/video/{video.video_id}/'
