@@ -10,7 +10,7 @@ from account import views as views
 urlpatterns = [
     path('settings/', views.settings),
     path('savesettings/', views.savesettings),
-    path('signin/', views.custom_login_view),
+    path('signin', views.custom_login_view),
     path('signup/', views.signup_view),
     path('playlist/<str:name>', views.playlist),
     path('addtowatchlater/<int:video>',views.addtowatchlater),
