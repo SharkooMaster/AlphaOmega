@@ -1,9 +1,10 @@
-<div class="p-1 flex flex-col gap-2 w-[400px] h-[280px] cursor-pointer">
+<div class="p-1 flex flex-col gap-2 w-[400px] min-h-[280px] cursor-pointer  relative">
 	<a
 		href="/page/video?{{ video.get }}"
 		>
-		<img src="{{ video.thumbnail }}" class="w-[400px] h-[220px] bg-black bg-center bg-cover bg-center" >
+		<img src="{{ video.thumbnail }}" class="w-[400px] h-[220px] bg-black bg-center bg-cover bg-center rounded-lg hover:rounded-none duration-100" >
 	</a>
 	{% include "account/WatchLaterButton.html" %}
 	<p class="text-black dark:text-white truncate flex-wrap w-full pr-2">{{ video.title }}</p>
+	<a href='/channel/{{video.channel.channel_id}}' class="link">{{video.channel.title}}</a>
 </div>

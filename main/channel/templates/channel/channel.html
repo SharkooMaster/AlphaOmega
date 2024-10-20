@@ -2,6 +2,7 @@
 
 {% block content %}
 	<div class="w-screen min-h-screen" >
+		<p>{{time}}</p>
 		<div class="flex flex-row justify-center p-12 ">
 			<img src="{{channel.profile_medium}}" alt="" />
 
@@ -16,10 +17,12 @@
 
 		<div class="divider"></div>
 		<div class="mx-auto px-4">
-			<div class="flex flex-wrap w-full h-full overflow-x-hidden gap-4 justify-center flex-row" >
-				{% for video in videos %}
-					{% include "page/video_item.html" with video=video %}
-				{% endfor %}
+
+			<div
+				hx-get="/channel/getvideos/{{channel.channel_id}}/10"
+				hx-trigger="load"
+				class="flex flex-wrap w-full h-full overflow-x-hidden gap-4 justify-center flex-row" >
+				<span class="loading loading-dots loading-md" ></span>
 			</div>
 		</div>
 
