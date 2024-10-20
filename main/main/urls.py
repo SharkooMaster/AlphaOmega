@@ -26,6 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path("", page_views.index, name="index"),
 	path("page/video/", page_views.addor_and_show, name="index"),
+	path("page/video", page_views.addor_and_show, name="index"),
 	path("account/", include("account.urls")),
 	path("channel/", include("channel.urls")),
 	path("playlist/", include("playlist.urls")),
