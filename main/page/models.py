@@ -1,5 +1,6 @@
 from django.db import models
 import json
+import urllib.parse
 
 from channel.models import Channel
 
@@ -21,3 +22,6 @@ class Video(models.Model):
 			'channel_id':self.channel.channel_id if self.channel != None else 0,
 			'channel_title':self.channel.title if self.channel != None else 0
 		})
+
+	def get(self):
+		return urllib.parse.urlencode(json.loads(self.json()))

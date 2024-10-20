@@ -28,6 +28,7 @@ def format_videos(response):
 	Will preforme a search to youtube with the search string and
 	return a list of videos in a nicer format.
 	"""
+	import urllib.parse
 
 	videos = []
 	for item in response['items']:
@@ -58,6 +59,7 @@ def format_videos(response):
 			'embed_url': f"https://www.youtube.com/embed/{video_id}"
 		}
 		video_data['json'] = json.dumps(video_data)
+		video_data['get'] = urllib.parse.urlencode(video_data)
 		videos.append(video_data)
 
 	return videos
@@ -97,7 +99,7 @@ def showVideo(request, video_id):
 	return render(request, "page/video.html", {'video': Video.objects.get(video_id=video_id), 'embed_url': embed_url, 'recommended': videos})
 
 def addor_and_show(request):
-	video_data = request.POST
+	video_data = request.GET
 
 	video, created = Video.objects.get_or_create(
 		video_id=video_data['video_id'],
@@ -111,6 +113,8 @@ def addor_and_show(request):
 	video.channel = channel
 	video.save()
 
-	response = HttpResponse()
-	response.headers['Hx-Redirect'] = f'/video/{video.video_id}/'
-	return response
+	return redirect(f'/video/{video.video_id}/')
+#	response = HttpResponse()
+#	response.headers['Hx-Redirect'] = f'/video/{video.video_id}/'
+#
+#	return response
